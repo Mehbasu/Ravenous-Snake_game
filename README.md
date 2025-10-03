@@ -1,10 +1,10 @@
-# 🐍 HungrySnake - Realistic Snake Game
+# 🐍 Ravenous Snake - Realistic Snake Game
 
 A modern, web-based implementation of the classic Snake game with realistic graphics, dual control methods, and multiple food types.
 
 ## 🎮 Game Overview
 
-HungrySnake is an enhanced version of the classic Snake game featuring:
+Ravenous Snake is an enhanced version of the classic Snake game featuring:
 - **Realistic snake graphics** with detailed segmentation, scales, and animated features
 - **Dual control methods** supporting both mouse and keyboard input
 - **Multiple food types** with unique appearances and behaviors
@@ -33,7 +33,7 @@ HungrySnake is an enhanced version of the classic Snake game featuring:
 ## 🎯 How to Play
 
 ### Objective
-Control your snake to eat as many fruits and vegetables as possible while avoiding walls and your own body. Each food item makes your snake grow longer and increases your score.
+Control your ravenous snake to devour as many fruits and vegetables as possible while avoiding walls and your own body. Each food item satisfies your snake's hunger, making it grow longer and increasing your score. The more your snake eats, the more ravenous it becomes!
 
 ### Controls
 **Dual Control System** - Choose your preferred method:
@@ -357,6 +357,6 @@ This project is open source and available under the MIT License.
 
 ---
 
-**Enjoy playing HungrySnake! 🐍🎮**
+**Enjoy playing Ravenous Snake! 🐍🎮**
 
 For support or questions, please check the troubleshooting section or open an issue in the project repository.
