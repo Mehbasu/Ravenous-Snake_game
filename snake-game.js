@@ -138,6 +138,10 @@ class SnakeGame {
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
         
+        // Store mouse position for indicator
+        this.lastMouseX = mouseX;
+        this.lastMouseY = mouseY;
+        
         const mouseGridX = Math.floor(mouseX / GRID_SIZE);
         const mouseGridY = Math.floor(mouseY / GRID_SIZE);
         
@@ -149,7 +153,8 @@ class SnakeGame {
         const currentDir = this.direction;
         
         // Only change direction if mouse is far enough and not reversing
-        if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
+        // Added minimum distance requirement to prevent erratic movement
+        if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
             if (Math.abs(dx) > Math.abs(dy)) {
                 // Horizontal movement is larger
                 if (dx > 0 && currentDir !== DIRECTIONS.LEFT) {
@@ -208,18 +213,22 @@ class SnakeGame {
         head.x += this.direction.x;
         head.y += this.direction.y;
         
-        // Check wall collision
+        // Check wall collision with proper bounds
         if (head.x < 0 || head.x >= GRID_WIDTH || head.y < 0 || head.y >= GRID_HEIGHT) {
             this.endGame();
             return;
         }
         
-        // Check self collision
-        if (this.snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-            this.endGame();
-            return;
+        // Check self collision - only check existing body segments
+        for (let i = 0; i < this.snake.length; i++) {
+            const segment = this.snake[i];
+            if (segment.x === head.x && segment.y === head.y) {
+                this.endGame();
+                return;
+            }
         }
         
+        // Add new head
         this.snake.unshift(head);
         
         // Check food collision
@@ -228,6 +237,7 @@ class SnakeGame {
             this.updateScore();
             this.generateFood();
         } else {
+            // Remove tail only if no food was eaten
             this.snake.pop();
         }
     }
