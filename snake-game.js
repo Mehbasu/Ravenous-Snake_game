@@ -54,10 +54,117 @@ class SnakeGame {
         this.gameStarted = false;
         this.animationId = null;
         
+        // Mobile detection
+        this.isMobile = this.detectMobile();
+        
         this.resetGame();
         this.setupEventListeners();
+        this.setupTouchControls();
         this.showStartScreen();
         this.draw(); // Draw initial state
+    }
+    
+    detectMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               ('ontouchstart' in window) ||
+               (window.innerWidth <= 768);
+    }
+    
+    setupTouchControls() {
+        // Touch controls for mobile
+        const controlButtons = document.querySelectorAll('.control-btn');
+        
+        controlButtons.forEach(button => {
+            // Touch events
+            button.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                const direction = button.getAttribute('data-direction');
+                this.handleTouchDirection(direction);
+            });
+            
+            // Mouse events for desktop
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const direction = button.getAttribute('data-direction');
+                this.handleTouchDirection(direction);
+            });
+        });
+        
+        // Prevent default touch behaviors
+        document.addEventListener('touchmove', (e) => {
+            if (e.target.closest('.game-container')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Add swipe gesture support
+        this.setupSwipeControls();
+    }
+    
+    handleTouchDirection(direction) {
+        if (this.gameState !== 'playing' || this.gameOver) return;
+        
+        const currentDir = this.direction;
+        
+        switch(direction) {
+            case 'up':
+                if (currentDir !== DIRECTIONS.DOWN) {
+                    this.direction = DIRECTIONS.UP;
+                }
+                break;
+            case 'down':
+                if (currentDir !== DIRECTIONS.UP) {
+                    this.direction = DIRECTIONS.DOWN;
+                }
+                break;
+            case 'left':
+                if (currentDir !== DIRECTIONS.RIGHT) {
+                    this.direction = DIRECTIONS.LEFT;
+                }
+                break;
+            case 'right':
+                if (currentDir !== DIRECTIONS.LEFT) {
+                    this.direction = DIRECTIONS.RIGHT;
+                }
+                break;
+        }
+    }
+    
+    setupSwipeControls() {
+        let startX, startY;
+        
+        this.canvas.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+        });
+        
+        this.canvas.addEventListener('touchend', (e) => {
+            if (!startX || !startY) return;
+            
+            const touch = e.changedTouches[0];
+            const endX = touch.clientX;
+            const endY = touch.clientY;
+            
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+            
+            // Minimum swipe distance
+            const minSwipeDistance = 30;
+            
+            if (Math.abs(deltaX) > minSwipeDistance || Math.abs(deltaY) > minSwipeDistance) {
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // Horizontal swipe
+                    this.handleTouchDirection(deltaX > 0 ? 'right' : 'left');
+                } else {
+                    // Vertical swipe
+                    this.handleTouchDirection(deltaY > 0 ? 'down' : 'up');
+                }
+            }
+            
+            startX = null;
+            startY = null;
+        });
     }
     
     showStartScreen() {
@@ -109,14 +216,16 @@ class SnakeGame {
     }
     
     setupEventListeners() {
-        // Mouse controls for snake movement
-        this.canvas.addEventListener('mousemove', (e) => {
-            if (this.gameState === 'playing' && !this.gameOver) {
-                this.updateDirectionFromMouse(e);
-            }
-        });
+        // Mouse controls for desktop
+        if (!this.isMobile) {
+            this.canvas.addEventListener('mousemove', (e) => {
+                if (this.gameState === 'playing' && !this.gameOver) {
+                    this.updateDirectionFromMouse(e);
+                }
+            });
+        }
         
-        // Keyboard controls for snake movement
+        // Keyboard controls for both desktop and mobile
         document.addEventListener('keydown', (e) => {
             if (this.gameState === 'playing' && !this.gameOver) {
                 this.updateDirectionFromKeyboard(e);
@@ -129,6 +238,13 @@ class SnakeGame {
                 if (e.key === ' ' || e.key === 'Enter') {
                     this.startGame();
                 }
+            }
+        });
+        
+        // Prevent zoom on double tap for mobile
+        document.addEventListener('touchend', (e) => {
+            if (e.target.closest('.game-container')) {
+                e.preventDefault();
             }
         });
     }

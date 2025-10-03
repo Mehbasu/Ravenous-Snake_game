@@ -2,7 +2,9 @@
 
 ## 🎮 **[▶️ PLAY GAME NOW!](https://mehbasu.github.io/Ravenous-Snake_game/)** 🎮
 
-*Click the link above to play the game directly in your browser!*
+*Click the link above to play the game directly in your browser on any device!*
+
+📱 **Mobile & Desktop Compatible** - Play anywhere, anytime!
 
 ---
 
@@ -42,14 +44,14 @@ Ravenous Snake is an enhanced version of the classic Snake game featuring:
 Control your ravenous snake to devour as many fruits and vegetables as possible while avoiding walls and your own body. Each food item satisfies your snake's hunger, making it grow longer and increasing your score. The more your snake eats, the more ravenous it becomes!
 
 ### Controls
-**Dual Control System** - Choose your preferred method:
+**Multi-Platform Control System** - Choose your preferred method:
 
-#### 🖱️ Mouse Controls
+#### 🖱️ Mouse Controls (Desktop)
 - **Move your mouse** around the game canvas
 - The snake will automatically move toward your mouse cursor
 - Smooth, intuitive movement perfect for beginners
 
-#### ⌨️ Keyboard Controls  
+#### ⌨️ Keyboard Controls (Desktop/Mobile)
 - **Arrow Keys**: Control snake direction
   - `↑` Up Arrow: Move up
   - `↓` Down Arrow: Move down
@@ -57,6 +59,12 @@ Control your ravenous snake to devour as many fruits and vegetables as possible 
   - `→` Right Arrow: Move right
 - **Space/Enter**: Start game from welcome screen
 - **C**: Play again after game over
+
+#### 📱 Mobile Touch Controls
+- **Touch Buttons**: On-screen directional buttons
+- **Swipe Gestures**: Swipe in any direction to control the snake
+- **Responsive Design**: Optimized for all screen sizes
+- **No Installation**: Play directly in mobile browser
 
 ### Game States
 1. **Start Screen**: Welcome screen with instructions and start button

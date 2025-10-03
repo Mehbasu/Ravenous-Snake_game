@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Ravenous Snake - Realistic Snake Game</title>
     <style>
         body {
@@ -45,6 +48,68 @@
         .controls {
             margin-top: 20px;
             font-size: 1.1em;
+        }
+
+        .mobile-controls {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .touch-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            gap: 10px;
+            max-width: 200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0.95);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .control-up {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .control-left {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .control-right {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        .control-down {
+            grid-column: 2;
+            grid-row: 3;
         }
 
         .score {
@@ -133,13 +198,86 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .game-container {
+                padding: 15px;
+                margin: 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
             canvas {
-                width: 90vw;
-                height: 60vw;
+                width: min(100vw - 40px, 400px);
+                height: min(67vw - 27px, 267px);
+                max-width: 400px;
+                max-height: 267px;
             }
             
             h1 {
-                font-size: 2em;
+                font-size: 1.8em;
+                margin-bottom: 15px;
+            }
+            
+            .score {
+                font-size: 1.2em;
+                margin: 8px 0;
+            }
+            
+            .controls {
+                font-size: 0.9em;
+                margin-top: 15px;
+            }
+            
+            .mobile-controls {
+                display: block;
+            }
+            
+            .start-screen, .game-over {
+                padding: 25px;
+                margin: 10px;
+                max-width: calc(100vw - 40px);
+                box-sizing: border-box;
+            }
+            
+            .start-screen h2, .game-over h2 {
+                font-size: 1.8em;
+            }
+            
+            .start-screen p, .game-over div {
+                font-size: 1em;
+                margin: 12px 0;
+            }
+            
+            .instructions {
+                font-size: 0.8em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 10px;
+            }
+            
+            canvas {
+                width: min(100vw - 30px, 350px);
+                height: min(67vw - 20px, 233px);
+            }
+            
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            .touch-controls {
+                max-width: 180px;
+            }
+            
+            .control-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
             }
         }
     </style>
@@ -157,9 +295,19 @@
             </div>
         </div>
         
+        <div class="mobile-controls">
+            <div>🐆 Touch controls for mobile:</div>
+            <div class="touch-controls">
+                <div class="control-btn control-up" data-direction="up">⬆️</div>
+                <div class="control-btn control-left" data-direction="left">⬅️</div>
+                <div class="control-btn control-right" data-direction="right">➡️</div>
+                <div class="control-btn control-down" data-direction="down">⬇️</div>
+            </div>
+        </div>
+        
         <div id="startScreen" class="start-screen">
             <h2>🐍 Ravenous Snake 🐍</h2>
-            <p>🖱️ Move your mouse OR ⌨️ use arrow keys to control</p>
+            <p>🖱️ Mouse, ⌨️ keyboard, or 🐆 touch to control</p>
             <p>🍎 Eat fruits and vegetables to grow bigger</p>
             <p>⚠️ Avoid walls and your own body</p>
             <button class="start-btn" onclick="startGame()">🎮 Start Game</button>
