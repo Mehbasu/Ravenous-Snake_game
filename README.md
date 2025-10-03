@@ -1,5 +1,11 @@
 # 🐍 Ravenous Snake - Realistic Snake Game
 
+## 🎮 **[▶️ PLAY GAME NOW!](https://mehbasu.github.io/Ravenous-Snake_game/)** 🎮
+
+*Click the link above to play the game directly in your browser!*
+
+---
+
 A modern, web-based implementation of the classic Snake game with realistic graphics, dual control methods, and multiple food types.
 
 ## 🎮 Game Overview
