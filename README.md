@@ -102,7 +102,7 @@ Each food type has unique visual characteristics and the same point value:
 ### Movement System
 - **Grid-Based**: Snake moves on a 20x20 pixel grid system
 - **Direction Logic**: Smart direction calculation prevents instant reversal
-- **Speed**: 10 FPS (moves every 100ms) for classic Snake feel
+- **Speed**: 6.67 FPS (moves every 150ms) for comfortable gameplay
 - **Anti-Glitch**: Built-in protection against rapid direction changes
 
 ## 🎨 Visual Design
@@ -119,7 +119,7 @@ Each food type has unique visual characteristics and the same point value:
 
 ### Canvas Rendering
 - **600x400 Resolution**: Optimal size for gameplay
-- **Real-time Rendering**: 60 FPS drawing with 10 FPS game logic
+- **Real-time Rendering**: 60 FPS drawing with 6.67 FPS game logic
 - **Anti-aliasing**: Smooth curves and shapes
 - **Layered Drawing**: Background → Snake → Food → UI overlays
 

@@ -638,7 +638,7 @@ class SnakeGame {
         if (this.gameState === 'playing' && !this.gameOver) {
             setTimeout(() => {
                 this.animationId = requestAnimationFrame(() => this.gameLoop());
-            }, 100); // 10 FPS like the original
+            }, 150); // Slower speed: 6.67 FPS (was 100ms/10 FPS)
         }
     }
 }
