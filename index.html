@@ -56,60 +56,13 @@
             text-align: center;
         }
 
-        .touch-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: 1fr 1fr 1fr;
-            gap: 10px;
-            max-width: 200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-
-        .control-btn {
-            width: 50px;
-            height: 50px;
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
+        .touch-instructions {
+            margin: 10px 0;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            user-select: none;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .control-btn:active {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(0.95);
-        }
-
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .control-up {
-            grid-column: 2;
-            grid-row: 1;
-        }
-
-        .control-left {
-            grid-column: 1;
-            grid-row: 2;
-        }
-
-        .control-right {
-            grid-column: 3;
-            grid-row: 2;
-        }
-
-        .control-down {
-            grid-column: 2;
-            grid-row: 3;
+            border-radius: 8px;
+            font-size: 0.9em;
+            opacity: 0.9;
         }
 
         .score {
@@ -269,16 +222,6 @@
             h1 {
                 font-size: 1.6em;
             }
-            
-            .touch-controls {
-                max-width: 180px;
-            }
-            
-            .control-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-            }
         }
     </style>
 </head>
@@ -288,7 +231,7 @@
         <div class="score">Score: <span id="score">0</span></div>
         <canvas id="gameCanvas" width="600" height="400"></canvas>
         <div class="controls">
-            <div>🖱️⌨️ Use mouse movement OR arrow keys to control the snake</div>
+            <div>🖱️⌨️ Desktop: Mouse movement OR arrow keys | 📱 Mobile: Touch canvas</div>
             <div class="instructions">
                 Eat fruits and vegetables to grow! 🍎🥕🍇🍌🍒🍊<br>
                 Avoid walls and your own body!
@@ -296,28 +239,25 @@
         </div>
         
         <div class="mobile-controls">
-            <div>🐆 Touch controls for mobile:</div>
-            <div class="touch-controls">
-                <div class="control-btn control-up" data-direction="up">⬆️</div>
-                <div class="control-btn control-left" data-direction="left">⬅️</div>
-                <div class="control-btn control-right" data-direction="right">➡️</div>
-                <div class="control-btn control-down" data-direction="down">⬇️</div>
+            <div>� Mobile: Touch anywhere on the game canvas to control direction</div>
+            <div class="touch-instructions">
+                Tap the canvas where you want the snake to move
             </div>
         </div>
         
         <div id="startScreen" class="start-screen">
             <h2>🐍 Ravenous Snake 🐍</h2>
-            <p>🖱️ Mouse, ⌨️ keyboard, or 🐆 touch to control</p>
+            <p>🖱️ Mouse, ⌨️ keyboard, or � touch canvas to control</p>
             <p>🍎 Eat fruits and vegetables to grow bigger</p>
             <p>⚠️ Avoid walls and your own body</p>
-            <button class="start-btn" onclick="startGame()">🎮 Start Game</button>
+            <button class="start-btn" onclick="handleStartButton(event)" ontouchstart="handleStartButton(event)">🎮 Start Game</button>
         </div>
         
         <div id="gameOver" class="game-over">
             <h2>Game Over!</h2>
             <div>Final Score: <span id="finalScore">0</span></div>
-            <button class="play-again" onclick="resetGame()">🎮 Play Again</button>
-            <button class="quit" onclick="quitGame()">🏠 Main Menu</button>
+            <button class="play-again" onclick="handleResetButton(event)" ontouchstart="handleResetButton(event)">🎮 Play Again</button>
+            <button class="quit" onclick="handleQuitButton(event)" ontouchstart="handleQuitButton(event)">🏠 Main Menu</button>
         </div>
     </div>
 

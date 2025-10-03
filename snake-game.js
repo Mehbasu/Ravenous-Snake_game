@@ -71,34 +71,68 @@ class SnakeGame {
     }
     
     setupTouchControls() {
-        // Touch controls for mobile
-        const controlButtons = document.querySelectorAll('.control-btn');
+        // Mobile direct canvas touch controls
+        if (this.isMobile) {
+            this.setupCanvasTouchControls();
+        }
         
-        controlButtons.forEach(button => {
-            // Touch events
-            button.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                const direction = button.getAttribute('data-direction');
-                this.handleTouchDirection(direction);
-            });
+        // Desktop and mobile swipe gesture support
+        this.setupSwipeControls();
+    }
+    
+    setupCanvasTouchControls() {
+        this.canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
             
-            // Mouse events for desktop
-            button.addEventListener('click', (e) => {
-                e.preventDefault();
-                const direction = button.getAttribute('data-direction');
-                this.handleTouchDirection(direction);
-            });
+            // Get touch position relative to canvas
+            const rect = this.canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const touchX = touch.clientX - rect.left;
+            const touchY = touch.clientY - rect.top;
+            
+            // Convert to game coordinates
+            const gameX = (touchX / rect.width) * CANVAS_WIDTH;
+            const gameY = (touchY / rect.height) * CANVAS_HEIGHT;
+            
+            this.handleCanvasTouch(gameX, gameY);
         });
         
-        // Prevent default touch behaviors
-        document.addEventListener('touchmove', (e) => {
-            if (e.target.closest('.game-container')) {
-                e.preventDefault();
-            }
+        // Prevent default touch behaviors on canvas
+        this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
         }, { passive: false });
+    }
+    
+    handleCanvasTouch(touchX, touchY) {
+        if (this.gameState !== 'playing' || this.gameOver) return;
         
-        // Add swipe gesture support
-        this.setupSwipeControls();
+        // Get snake head position in pixels
+        const head = this.snake[0];
+        const headX = (head.x + 0.5) * GRID_SIZE;
+        const headY = (head.y + 0.5) * GRID_SIZE;
+        
+        // Calculate direction based on touch position relative to snake head
+        const deltaX = touchX - headX;
+        const deltaY = touchY - headY;
+        
+        const currentDir = this.direction;
+        
+        // Determine primary direction (horizontal or vertical)
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal movement
+            if (deltaX > 0 && currentDir !== DIRECTIONS.LEFT) {
+                this.direction = DIRECTIONS.RIGHT;
+            } else if (deltaX < 0 && currentDir !== DIRECTIONS.RIGHT) {
+                this.direction = DIRECTIONS.LEFT;
+            }
+        } else {
+            // Vertical movement
+            if (deltaY > 0 && currentDir !== DIRECTIONS.UP) {
+                this.direction = DIRECTIONS.DOWN;
+            } else if (deltaY < 0 && currentDir !== DIRECTIONS.DOWN) {
+                this.direction = DIRECTIONS.UP;
+            }
+        }
     }
     
     handleTouchDirection(direction) {
@@ -782,6 +816,22 @@ function startGame() {
     if (gameInstance) {
         gameInstance.startGame();
     }
+}
+
+// Enhanced button functions with touch support
+function handleStartButton(event) {
+    event.preventDefault();
+    startGame();
+}
+
+function handleResetButton(event) {
+    event.preventDefault();
+    resetGame();
+}
+
+function handleQuitButton(event) {
+    event.preventDefault();
+    quitGame();
 }
 
 function resetGame() {
