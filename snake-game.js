@@ -81,8 +81,16 @@ class SnakeGame {
     }
     
     setupCanvasTouchControls() {
+        let lastTouchTime = 0;
+        let touchDebounceDelay = 200; // Minimum time between direction changes (ms)
+        
         this.canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            
+            const currentTime = Date.now();
+            if (currentTime - lastTouchTime < touchDebounceDelay) {
+                return; // Ignore rapid touches
+            }
             
             // Get touch position relative to canvas
             const rect = this.canvas.getBoundingClientRect();
@@ -94,17 +102,23 @@ class SnakeGame {
             const gameX = (touchX / rect.width) * CANVAS_WIDTH;
             const gameY = (touchY / rect.height) * CANVAS_HEIGHT;
             
-            this.handleCanvasTouch(gameX, gameY);
+            if (this.handleCanvasTouch(gameX, gameY)) {
+                lastTouchTime = currentTime;
+            }
         });
         
         // Prevent default touch behaviors on canvas
         this.canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
         }, { passive: false });
+        
+        this.canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+        }, { passive: false });
     }
     
     handleCanvasTouch(touchX, touchY) {
-        if (this.gameState !== 'playing' || this.gameOver) return;
+        if (this.gameState !== 'playing' || this.gameOver) return false;
         
         // Get snake head position in pixels
         const head = this.snake[0];
@@ -115,24 +129,40 @@ class SnakeGame {
         const deltaX = touchX - headX;
         const deltaY = touchY - headY;
         
-        const currentDir = this.direction;
+        // Minimum distance threshold for touch sensitivity
+        const minTouchDistance = GRID_SIZE * 0.8; // Must touch at least 80% of a grid cell away
+        const totalDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         
-        // Determine primary direction (horizontal or vertical)
+        if (totalDistance < minTouchDistance) {
+            return false; // Touch too close to snake head
+        }
+        
+        const currentDir = this.direction;
+        let newDirection = null;
+        
+        // Determine primary direction (horizontal or vertical) with improved sensitivity
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             // Horizontal movement
             if (deltaX > 0 && currentDir !== DIRECTIONS.LEFT) {
-                this.direction = DIRECTIONS.RIGHT;
+                newDirection = DIRECTIONS.RIGHT;
             } else if (deltaX < 0 && currentDir !== DIRECTIONS.RIGHT) {
-                this.direction = DIRECTIONS.LEFT;
+                newDirection = DIRECTIONS.LEFT;
             }
         } else {
             // Vertical movement
             if (deltaY > 0 && currentDir !== DIRECTIONS.UP) {
-                this.direction = DIRECTIONS.DOWN;
+                newDirection = DIRECTIONS.DOWN;
             } else if (deltaY < 0 && currentDir !== DIRECTIONS.DOWN) {
-                this.direction = DIRECTIONS.UP;
+                newDirection = DIRECTIONS.UP;
             }
         }
+        
+        if (newDirection && newDirection !== currentDir) {
+            this.direction = newDirection;
+            return true; // Direction changed successfully
+        }
+        
+        return false; // No direction change
     }
     
     handleTouchDirection(direction) {

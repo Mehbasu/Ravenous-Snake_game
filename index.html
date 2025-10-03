@@ -83,10 +83,13 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.9);
-            padding: 40px;
+            padding: 30px;
             border-radius: 15px;
             text-align: center;
             z-index: 1000;
+            min-width: 300px;
+            max-width: 500px;
+            width: 80vw;
         }
 
         .start-screen h2 {
@@ -106,11 +109,14 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             text-align: center;
             display: none;
             z-index: 1000;
+            min-width: 280px;
+            max-width: 450px;
+            width: 75vw;
         }
 
         .game-over h2 {
@@ -152,51 +158,66 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 0;
+                margin: 0;
+                height: 100vh;
+                overflow: hidden;
             }
             
             .game-container {
-                padding: 15px;
+                padding: 10px;
                 margin: 0;
-                width: 100%;
+                width: 100vw;
+                height: 100vh;
                 box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
             }
             
             canvas {
-                width: min(100vw - 40px, 400px);
-                height: min(67vw - 27px, 267px);
-                max-width: 400px;
-                max-height: 267px;
+                width: min(100vw - 20px, 95vw);
+                height: min(60vh, calc((100vw - 20px) * 0.67));
+                max-width: none;
+                max-height: none;
+                touch-action: none;
             }
             
             h1 {
-                font-size: 1.8em;
-                margin-bottom: 15px;
+                font-size: 1.6em;
+                margin: 5px 0 10px 0;
             }
             
             .score {
-                font-size: 1.2em;
-                margin: 8px 0;
+                font-size: 1.1em;
+                margin: 5px 0;
             }
             
             .controls {
-                font-size: 0.9em;
-                margin-top: 15px;
+                font-size: 0.8em;
+                margin: 8px 0;
             }
             
             .mobile-controls {
                 display: block;
+                margin: 5px 0;
             }
             
             .start-screen, .game-over {
-                padding: 25px;
+                padding: 20px;
                 margin: 10px;
-                max-width: calc(100vw - 40px);
+                width: min(90vw, 400px);
+                max-width: 90vw;
+                max-height: 70vh;
                 box-sizing: border-box;
+                border-radius: 20px;
+                overflow-y: auto;
             }
             
             .start-screen h2, .game-over h2 {
-                font-size: 1.8em;
+                font-size: 1.6em;
+                margin: 0 0 15px 0;
             }
             
             .start-screen p, .game-over div {
@@ -211,16 +232,40 @@
         
         @media (max-width: 480px) {
             .game-container {
-                padding: 10px;
+                padding: 5px;
             }
             
             canvas {
-                width: min(100vw - 30px, 350px);
-                height: min(67vw - 20px, 233px);
+                width: 98vw;
+                height: min(65vh, calc(98vw * 0.67));
+                touch-action: none;
             }
             
             h1 {
-                font-size: 1.6em;
+                font-size: 1.4em;
+                margin: 3px 0 8px 0;
+            }
+            
+            .start-screen, .game-over {
+                width: 95vw;
+                padding: 15px;
+                margin: 5px;
+                border-radius: 15px;
+            }
+            
+            .start-screen h2, .game-over h2 {
+                font-size: 1.4em;
+            }
+            
+            .start-screen p, .game-over div {
+                font-size: 0.9em;
+                margin: 8px 0;
+            }
+            
+            .start-screen button, .game-over button {
+                padding: 12px 20px;
+                font-size: 1em;
+                margin: 8px 5px;
             }
         }
     </style>
