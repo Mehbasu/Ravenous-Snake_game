@@ -82,7 +82,7 @@ class SnakeGame {
     
     setupCanvasTouchControls() {
         let lastTouchTime = 0;
-        let touchDebounceDelay = 100; // Reduced debounce delay for better responsiveness
+        let touchDebounceDelay = 400; // Increased debounce delay to reduce sensitivity
         
         this.canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -98,11 +98,9 @@ class SnakeGame {
             const touchX = touch.clientX - rect.left;
             const touchY = touch.clientY - rect.top;
             
-            // Convert to game coordinates with proper scaling
-            const scaleX = CANVAS_WIDTH / rect.width;
-            const scaleY = CANVAS_HEIGHT / rect.height;
-            const gameX = touchX * scaleX;
-            const gameY = touchY * scaleY;
+            // Convert to game coordinates
+            const gameX = (touchX / rect.width) * CANVAS_WIDTH;
+            const gameY = (touchY / rect.height) * CANVAS_HEIGHT;
             
             if (this.handleCanvasTouch(gameX, gameY)) {
                 lastTouchTime = currentTime;
@@ -131,8 +129,8 @@ class SnakeGame {
         const deltaX = touchX - headX;
         const deltaY = touchY - headY;
         
-        // Minimum distance threshold for touch sensitivity
-        const minTouchDistance = GRID_SIZE * 1.2; // Increased threshold for better precision
+        // Increased minimum distance threshold for better touch sensitivity control
+        const minTouchDistance = GRID_SIZE * 1.5; // Must touch at least 1.5 grid cells away
         const totalDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         
         if (totalDistance < minTouchDistance) {
@@ -142,27 +140,20 @@ class SnakeGame {
         const currentDir = this.direction;
         let newDirection = null;
         
-        // Enhanced direction detection with clearer logic
-        // Use a larger threshold to avoid accidental direction changes
-        const directionThreshold = GRID_SIZE * 0.5;
-        
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > directionThreshold) {
-            // Clear horizontal movement
+        // Fixed direction logic - corrected coordinate system
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal movement
             if (deltaX > 0 && currentDir !== DIRECTIONS.LEFT) {
-                // Touch is to the RIGHT of snake head → move RIGHT
-                newDirection = DIRECTIONS.RIGHT;
+                newDirection = DIRECTIONS.RIGHT; // Touch to the right = go right
             } else if (deltaX < 0 && currentDir !== DIRECTIONS.RIGHT) {
-                // Touch is to the LEFT of snake head → move LEFT  
-                newDirection = DIRECTIONS.LEFT;
+                newDirection = DIRECTIONS.LEFT; // Touch to the left = go left
             }
-        } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > directionThreshold) {
-            // Clear vertical movement
+        } else {
+            // Vertical movement
             if (deltaY > 0 && currentDir !== DIRECTIONS.UP) {
-                // Touch is BELOW snake head → move DOWN
-                newDirection = DIRECTIONS.DOWN;
+                newDirection = DIRECTIONS.DOWN; // Touch below = go down
             } else if (deltaY < 0 && currentDir !== DIRECTIONS.DOWN) {
-                // Touch is ABOVE snake head → move UP
-                newDirection = DIRECTIONS.UP;
+                newDirection = DIRECTIONS.UP; // Touch above = go up
             }
         }
         
@@ -837,7 +828,7 @@ class SnakeGame {
         if (this.gameState === 'playing' && !this.gameOver) {
             setTimeout(() => {
                 this.animationId = requestAnimationFrame(() => this.gameLoop());
-            }, 150); // Slower speed: 6.67 FPS (was 100ms/10 FPS)
+            }, 200); // Slower speed: 5 FPS (was 150ms/6.67 FPS)
         }
     }
 }
