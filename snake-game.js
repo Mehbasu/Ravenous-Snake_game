@@ -82,7 +82,7 @@ class SnakeGame {
     
     setupCanvasTouchControls() {
         let lastTouchTime = 0;
-        let touchDebounceDelay = 200; // Minimum time between direction changes (ms)
+        let touchDebounceDelay = 100; // Reduced debounce delay for better responsiveness
         
         this.canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -98,9 +98,11 @@ class SnakeGame {
             const touchX = touch.clientX - rect.left;
             const touchY = touch.clientY - rect.top;
             
-            // Convert to game coordinates
-            const gameX = (touchX / rect.width) * CANVAS_WIDTH;
-            const gameY = (touchY / rect.height) * CANVAS_HEIGHT;
+            // Convert to game coordinates with proper scaling
+            const scaleX = CANVAS_WIDTH / rect.width;
+            const scaleY = CANVAS_HEIGHT / rect.height;
+            const gameX = touchX * scaleX;
+            const gameY = touchY * scaleY;
             
             if (this.handleCanvasTouch(gameX, gameY)) {
                 lastTouchTime = currentTime;
@@ -130,7 +132,7 @@ class SnakeGame {
         const deltaY = touchY - headY;
         
         // Minimum distance threshold for touch sensitivity
-        const minTouchDistance = GRID_SIZE * 0.8; // Must touch at least 80% of a grid cell away
+        const minTouchDistance = GRID_SIZE * 1.2; // Increased threshold for better precision
         const totalDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
         
         if (totalDistance < minTouchDistance) {
@@ -140,19 +142,26 @@ class SnakeGame {
         const currentDir = this.direction;
         let newDirection = null;
         
-        // Determine primary direction (horizontal or vertical) with improved sensitivity
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            // Horizontal movement
+        // Enhanced direction detection with clearer logic
+        // Use a larger threshold to avoid accidental direction changes
+        const directionThreshold = GRID_SIZE * 0.5;
+        
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > directionThreshold) {
+            // Clear horizontal movement
             if (deltaX > 0 && currentDir !== DIRECTIONS.LEFT) {
+                // Touch is to the RIGHT of snake head → move RIGHT
                 newDirection = DIRECTIONS.RIGHT;
             } else if (deltaX < 0 && currentDir !== DIRECTIONS.RIGHT) {
+                // Touch is to the LEFT of snake head → move LEFT  
                 newDirection = DIRECTIONS.LEFT;
             }
-        } else {
-            // Vertical movement
+        } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > directionThreshold) {
+            // Clear vertical movement
             if (deltaY > 0 && currentDir !== DIRECTIONS.UP) {
+                // Touch is BELOW snake head → move DOWN
                 newDirection = DIRECTIONS.DOWN;
             } else if (deltaY < 0 && currentDir !== DIRECTIONS.DOWN) {
+                // Touch is ABOVE snake head → move UP
                 newDirection = DIRECTIONS.UP;
             }
         }
